@@ -5,6 +5,8 @@
 
 class QuestionWidget;
 
+class Solution;
+
 class Question {
 	
 	private:
@@ -16,6 +18,8 @@ class Question {
 	ConstStringPointer getHeader() const;
 	
 	virtual QuestionWidget * newQuestionWidget(QWidget * parent) const = 0;
+	
+	virtual bool fit(const Solution * solution) const = 0;
 	
 	virtual ~Question();
 	

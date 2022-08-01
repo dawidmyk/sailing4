@@ -14,6 +14,8 @@ class OneChoiceQuestion : public NormalQuestion {
 	
 	QuestionWidget * newQuestionWidget(QWidget * parent) const override;
 	
+	bool fit(const Solution * solution) const override;
+	
 	~OneChoiceQuestion() override;
 	
 };

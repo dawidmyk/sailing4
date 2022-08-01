@@ -28,7 +28,11 @@ SOURCES += Question/Question.cpp \
 	MainWindow/TestButton.cpp \
 	main/main.cpp \
 	main/fetchTests.cpp \
-	Seeker/Seeker.cpp
+	Seeker/Seeker.cpp \
+	Mark/PartialMark.cpp \
+	Mark/Mark.cpp \
+	Solution/OneChoiceSolution.cpp \
+	Solution/MultiChoiceSolution.cpp
 HEADERS += Question/Question.hpp \
 	Defines/StringPointer.hpp \
 	Question/NormalQuestion.hpp \
@@ -71,7 +75,12 @@ HEADERS += Question/Question.hpp \
 	Defines/TestSuitePointer.hpp \
 	TestFormat/TestFormat.hpp \
 	main/fetchTests.hpp \
-	Defines/SeekerPointer.hpp
+	Defines/SeekerPointer.hpp \
+	Mark/PartialMark.hpp \
+	Mark/Mark.hpp \
+	Solution/Solution.hpp \
+	Solution/OneChoiceSolution.hpp \
+	Solution/MultiChoiceSolution.hpp
 	
 QMAKE_CXXFLAGS += -fmax-errors=3
 FORMS += QuestionWidget/QuestionWidget.ui \

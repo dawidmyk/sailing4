@@ -32,7 +32,10 @@ SOURCES += Question/Question.cpp \
 	Mark/PartialMark.cpp \
 	Mark/Mark.cpp \
 	Solution/OneChoiceSolution.cpp \
-	Solution/MultiChoiceSolution.cpp
+	Solution/MultiChoiceSolution.cpp \
+	Solution/SolutionList.cpp \
+	SolvedTest/SolvedTest.cpp \
+	Marker/BinaryMarker.cpp
 HEADERS += Question/Question.hpp \
 	Defines/StringPointer.hpp \
 	Question/NormalQuestion.hpp \
@@ -80,7 +83,15 @@ HEADERS += Question/Question.hpp \
 	Mark/Mark.hpp \
 	Solution/Solution.hpp \
 	Solution/OneChoiceSolution.hpp \
-	Solution/MultiChoiceSolution.hpp
+	Solution/MultiChoiceSolution.hpp \
+	Marker/Marker.hpp \
+	Marker/BinaryMarker.hpp \
+	Defines/SolutionPointer.hpp \
+	Defines/OneChoiceSolutionPointer.hpp \
+	Defines/MultiChoiceSolutionPointer.hpp \
+	Solution/SolutionList.hpp \
+	Defines/SolutionListPointer.hpp \
+	SolvedTest/SolvedTest.hpp
 	
 QMAKE_CXXFLAGS += -fmax-errors=3
 FORMS += QuestionWidget/QuestionWidget.ui \

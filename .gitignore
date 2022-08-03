@@ -2,3 +2,7 @@ build
 build/*
 token
 gitpush
+.idea
+.idea/*
+cmake-build-debug
+cmake-build-debug/*

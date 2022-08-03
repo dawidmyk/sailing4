@@ -15,8 +15,10 @@ class MultiChoiceQuestion : public NormalQuestion {
 	ConstSetOfIntsPointer getCorrectAnswers() const;
 	
 	QuestionWidget * newQuestionWidget(QWidget * parent) const override;
-	
-	~MultiChoiceQuestion() override;
+
+    bool fit(ConstSolutionPointer solution) const override;
+
+    ~MultiChoiceQuestion() override;
 	
 };
 	

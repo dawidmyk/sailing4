@@ -1,4 +1,5 @@
 #include "QuestionWidget/MultiChoiceQuestionWidget.hpp"
+#include "Defines/MultiChoiceSolutionPointer.hpp"
 
 MultiChoiceQuestion::MultiChoiceQuestion(const StringPointer header, const StringListPointer possibleAnswers,
 	const SetOfIntsPointer correctAnswers):
@@ -13,6 +14,13 @@ ConstSetOfIntsPointer MultiChoiceQuestion::getCorrectAnswers() const {
 QuestionWidget * MultiChoiceQuestion::newQuestionWidget(QWidget * const parent) const {
 	return new MultiChoiceQuestionWidget(parent, this);
 }
+
+bool MultiChoiceQuestion::fit(const ConstSolutionPointer solution) const {
+    const ConstMultiChoiceSolutionPointer castedSolution
+        = static_cast<ConstMultiChoiceSolutionPointer>(solution);
+    return *correctAnswers == *castedSolution->getChosenAnswers();
+}
+
 
 MultiChoiceQuestion::~MultiChoiceQuestion() {
 }

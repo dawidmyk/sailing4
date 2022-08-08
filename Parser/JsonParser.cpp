@@ -108,6 +108,9 @@ TokenPointer JsonParser::nextToken() {
 	}
 	
 	if(multiChoice == MultiChoice::one) {
+	
+		if(possibleAnswers->size() == 1)
+			return new FailToken;
 		
 		if(correctAnswer > possibleAnswers->size())
 			return new FailToken;
@@ -180,7 +183,7 @@ bool JsonParser::getCorrectAnswers(const QJsonObject::const_iterator objectItera
 	
 	while(arrayIterator != arrayEnd) {
 		const int correctAnswer = arrayIterator->toInt();
-		if(correctAnswer == 0)
+		if(correctAnswer <= 0)
 			return false;
 			
 		(**correctAnswers) += correctAnswer;

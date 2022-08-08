@@ -10,8 +10,8 @@ class NormalQuestionWidget : public QuestionWidget {
 	Q_OBJECT
 	
 	protected:
-	QList<QRadioButton *> possibleAnswers;
 	QButtonGroup * group;
+	QFormLayout * layout;
 	
 	public:
 	NormalQuestionWidget(QWidget * parent, ConstNormalQuestionPointer question);

@@ -7,4 +7,6 @@
 class Marker {
     public:
     virtual PartialMark mark(ConstQuestionPointer question, ConstSolutionPointer solution) const = 0;
+    
+    virtual ~Marker();
 };

@@ -6,3 +6,6 @@ PartialMark BinaryMarker::mark(const ConstQuestionPointer question, const ConstS
 
     return PartialMark(0, 1);
 }
+
+BinaryMarker::~BinaryMarker() {
+}

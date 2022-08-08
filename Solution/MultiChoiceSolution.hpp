@@ -11,4 +11,8 @@ class MultiChoiceSolution : public Solution {
 	public:
 	ConstSetOfIntsPointer getChosenAnswers() const;
 	
+	MultiChoiceSolution(SetOfIntsPointer chosenAnswers);
+	
+	~MultiChoiceSolution() override;
+	
 };

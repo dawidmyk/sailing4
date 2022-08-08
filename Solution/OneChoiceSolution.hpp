@@ -9,6 +9,8 @@ class OneChoiceSolution : public Solution {
 	public:
 	int getChosenAnswer() const;
 	
-	// jeszcze nie mamy jak się tworzy
+	OneChoiceSolution(int chosenAnswer);
+	
+	~OneChoiceSolution() override;
 	
 };

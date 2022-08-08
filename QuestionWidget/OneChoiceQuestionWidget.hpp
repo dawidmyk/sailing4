@@ -10,6 +10,8 @@ class OneChoiceQuestionWidget : public NormalQuestionWidget {
 	public:
 	OneChoiceQuestionWidget(QWidget * parent, ConstOneChoiceQuestionPointer question);
 	
+	SolutionPointer getSolution() const override;
+	
 	~OneChoiceQuestionWidget() override;
 	
 	private slots:

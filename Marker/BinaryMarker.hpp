@@ -5,4 +5,6 @@
 class BinaryMarker : public Marker {
     public:
     PartialMark mark(ConstQuestionPointer question, ConstSolutionPointer solution) const override;
+    
+    ~BinaryMarker() override;
 };

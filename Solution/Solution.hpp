@@ -2,5 +2,8 @@
 
 class Solution {
 
+	public:
+	
+	virtual ~Solution();
 
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Defines/QuestionPointer.hpp"
+#include "Defines/SolutionPointer.hpp"
 #include "ui_QuestionWidget.h"
 
 namespace Ui {
@@ -16,6 +17,8 @@ class QuestionWidget : public QWidget {
 
 	public:
 	QuestionWidget(QWidget * parent, ConstQuestionPointer question);
+	
+	virtual SolutionPointer getSolution() const = 0;
 	
 	virtual ~QuestionWidget();
 	

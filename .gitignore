@@ -1,8 +1,8 @@
-build
-build/*
+build-qmake
+build-qmake/*
 token
 gitpush
 .idea
 .idea/*
-cmake-build-debug
-cmake-build-debug/*
+build-cmake
+build-cmake/*

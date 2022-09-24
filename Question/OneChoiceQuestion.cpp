@@ -1,8 +1,9 @@
 #include "QuestionWidget/OneChoiceQuestionWidget.hpp"
 #include "Defines/OneChoiceSolutionPointer.hpp"
 
-OneChoiceQuestion::OneChoiceQuestion(const StringPointer header, const StringListPointer possibleAnswers, const int correctAnswer):
-	NormalQuestion(header, possibleAnswers), correctAnswer(correctAnswer)
+OneChoiceQuestion::OneChoiceQuestion(const StringPointer header, const StringPointer category,
+                                     const StringListPointer possibleAnswers, const int correctAnswer):
+	NormalQuestion(header, category, possibleAnswers), correctAnswer(correctAnswer)
 	{
 	}
 	

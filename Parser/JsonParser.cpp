@@ -2,11 +2,10 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QTextStream>
-#include "Token/EndToken.hpp"
-#include "Token/FailToken.hpp"
-#include "Token/QuestionToken.hpp"
 #include "Question/OneChoiceQuestion.hpp"
 #include "Question/MultiChoiceQuestion.hpp"
+
+using std::unique_ptr;
 
 enum class MultiChoice {
 	non,
@@ -14,122 +13,15 @@ enum class MultiChoice {
 	multi
 };
 
-void JsonParser::setSource(const QString & filename) {
-	QFile file(filename);
-	file.open(QIODevice::ReadOnly);
-	QString s;
-
-    QTextStream stream(&file);
-    s.append(stream.readAll());
-    
-    QByteArray jsonData = s.toUtf8();
-    QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonData);
-    
-    if(!jsonDocument.isArray()) {
-		fail = true;
-		return;
-	}
-	
-	array.reset(new QJsonArray(jsonDocument.array()));
-	
-	iterator = array->constBegin();
-	
-	end = array->constEnd();
-
-}
-
-TokenPointer JsonParser::nextToken() {
-	
-	if(fail)
-		return new FailToken;
-		
-	if(iterator == end)
-		return new EndToken;
-		
-	if(!iterator->isObject())
-		return new FailToken;
-		
-	const QJsonObject object = iterator->toObject();
-		
-	QJsonObject::const_iterator objectIterator = object.constBegin();
-	
-	const QJsonObject::const_iterator objectEnd = object.constEnd();
-	
-	StringUniquePointer header;
-	StringListUniquePointer possibleAnswers;
-	SetOfIntsUniquePointer correctAnswers;
-	int correctAnswer = 0;
-	MultiChoice multiChoice = MultiChoice::non;
-	while(objectIterator != objectEnd) {
-		if(objectIterator.key() == QString("question")) {
-			if(!getHeader(objectIterator, &header))
-				return new FailToken;
-		}
-		else if(objectIterator.key() == QString("possibleAnswers")) {
-			if(!getPossibleAnswers(objectIterator, &possibleAnswers))
-				return new FailToken;
-		}
-		else if(objectIterator.key() == QString("correctAnswers")) {
-			if(multiChoice == MultiChoice::one)
-				return new FailToken;
-			if(!getCorrectAnswers(objectIterator, &correctAnswers))
-				return new FailToken;
-			else
-				multiChoice = MultiChoice::multi;
-		}
-		else if(objectIterator.key() == QString("correctAnswer")) {
-			if(multiChoice == MultiChoice::multi)
-				return new FailToken;
-			if(!getCorrectAnswer(objectIterator, &correctAnswer))
-				return new FailToken;
-			else
-				multiChoice = MultiChoice::one;
-		}
-		else
-			return new FailToken;
-		++objectIterator;
-	}
-	
-	if(!(bool(header) && bool(possibleAnswers)))
-		return new FailToken;
-			
-	if(multiChoice == MultiChoice::multi) {
-		
-		QSet<int>::const_iterator setIterator = correctAnswers->constBegin();
-		const QSet<int>::const_iterator setEnd = correctAnswers->constEnd();
-		while(setIterator != setEnd) {
-			if(*setIterator > possibleAnswers->size())
-				return new FailToken;
-			++setIterator;
-		}
-		++iterator;
-		return new QuestionToken(new MultiChoiceQuestion(header.release(), possibleAnswers.release(), correctAnswers.release()));
-	
-	}
-	
-	if(multiChoice == MultiChoice::one) {
-	
-		if(possibleAnswers->size() == 1)
-			return new FailToken;
-		
-		if(correctAnswer > possibleAnswers->size())
-			return new FailToken;
-		
-		++iterator;
-		return new QuestionToken(new OneChoiceQuestion(header.release(), possibleAnswers.release(), correctAnswer));
-	}
-		
-	return new FailToken;
-}
-
-bool JsonParser::getHeader(const QJsonObject::const_iterator objectIterator, StringUniquePointer * const header) {
+bool JsonParser::getString(const QJsonObject::const_iterator objectIterator,
+                           StringUniquePointer * const string) {
 		
 	const QJsonValue value = objectIterator.value();
 	
 	if(!value.isString())
 		return false;
 	
-	header->reset(new QString(value.toString()));
+	string->reset(new QString(value.toString()));
 	
 	return true;
 	
@@ -207,6 +99,129 @@ bool JsonParser::getCorrectAnswer(const QJsonObject::const_iterator objectIterat
 		
 	return true;
 	
+}
+
+QJsonDocument * JsonParser::readDocument(const QString & filename) {
+    QFile file(filename);
+    file.open(QIODevice::ReadOnly);
+    QString s;
+
+    QTextStream stream(&file);
+    s.append(stream.readAll());
+
+    QByteArray jsonData = s.toUtf8();
+    return new QJsonDocument(QJsonDocument::fromJson(jsonData));
+}
+
+bool JsonParser::getQuestion(QuestionUniquePointer * const question, const QJsonObject * const object) {
+    QJsonObject::const_iterator objectIterator = object->constBegin();
+
+    const QJsonObject::const_iterator objectEnd = object->constEnd();
+
+    StringUniquePointer header;
+    StringUniquePointer category;
+    StringListUniquePointer possibleAnswers;
+    SetOfIntsUniquePointer correctAnswers;
+    int correctAnswer = 0;
+    MultiChoice multiChoice = MultiChoice::non;
+    while(objectIterator != objectEnd) {
+        if(objectIterator.key() == QString("question")) {
+            if(!getString(objectIterator, &header))
+                return false;
+        }
+        else if(objectIterator.key() == QString("category")) {
+            if(!getString(objectIterator, &category))
+                return false;
+        }
+        else if(objectIterator.key() == QString("possibleAnswers")) {
+            if(!getPossibleAnswers(objectIterator, &possibleAnswers))
+                return false;
+        }
+        else if(objectIterator.key() == QString("correctAnswers")) {
+            if(multiChoice == MultiChoice::one)
+                return false;
+            if(!getCorrectAnswers(objectIterator, &correctAnswers))
+                return false;
+            else
+                multiChoice = MultiChoice::multi;
+        }
+        else if(objectIterator.key() == QString("correctAnswer")) {
+            if(multiChoice == MultiChoice::multi)
+                return false;
+            if(!getCorrectAnswer(objectIterator, &correctAnswer))
+                return false;
+            else
+                multiChoice = MultiChoice::one;
+        }
+        else
+            return false;
+        ++objectIterator;
+    }
+
+    if(!(bool(header) && bool(possibleAnswers)))
+        return false;
+
+    if(multiChoice == MultiChoice::multi) {
+
+        QSet<int>::const_iterator setIterator = correctAnswers->constBegin();
+        const QSet<int>::const_iterator setEnd = correctAnswers->constEnd();
+        while(setIterator != setEnd) {
+            if(*setIterator > possibleAnswers->size())
+                return false;
+            ++setIterator;
+        }
+        question->reset(new MultiChoiceQuestion(header.release(), category.release(),
+                                                possibleAnswers.release(),
+                                                correctAnswers.release()));
+        return true;
+
+    }
+
+    if(multiChoice == MultiChoice::one) {
+
+        if(possibleAnswers->size() == 1)
+            return false;
+
+        if(correctAnswer > possibleAnswers->size())
+            return false;
+
+        question->reset(new OneChoiceQuestion(header.release(), category.release(),
+                                              possibleAnswers.release(), correctAnswer));
+        return true;
+    }
+
+    return false;
+
+}
+
+bool JsonParser::parseTest(const QString & filename, TestUniquePointer * const test) {
+    unique_ptr<QJsonDocument> document(readDocument(filename));
+    if(!document->isArray())
+        return false;
+    const QJsonArray array(document->array());
+    QJsonArray::const_iterator it = array.constBegin();
+    const QJsonArray::const_iterator end = array.constEnd();
+    QuestionListUniquePointer questionList(new QuestionList);
+    while(it != end) {
+        if(!it->isObject())
+            return false;
+        const QJsonObject object = it->toObject();
+        QuestionUniquePointer question;
+        if(!getQuestion(&question, &object))
+            return false;
+        questionList->append(question.release());
+        ++it;
+    }
+    test->reset(new Test(questionList.release()));
+    return true;
+}
+
+bool JsonParser::parseQuestion(const QString & filename, QuestionUniquePointer * const question) {
+    unique_ptr<QJsonDocument> document(readDocument(filename));
+    if(!document->isObject())
+        return false;
+    QJsonObject object = document->object();
+    return getQuestion(question, &object);
 }
 
 JsonParser::~JsonParser() {

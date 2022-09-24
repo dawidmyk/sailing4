@@ -1,7 +1,8 @@
 #include "NormalQuestion.hpp"
 
-NormalQuestion::NormalQuestion(const StringPointer header, const StringListPointer possibleAnswers):
-	Question(header), possibleAnswers(possibleAnswers)
+NormalQuestion::NormalQuestion(const StringPointer header, const StringPointer category,
+                               const StringListPointer possibleAnswers):
+	Question(header, category), possibleAnswers(possibleAnswers)
 	{
 	}
 	

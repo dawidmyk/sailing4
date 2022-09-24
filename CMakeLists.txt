@@ -23,17 +23,9 @@ set(headers
     QuestionWidget/MultiChoiceQuestionWidget.hpp
     Defines/OneChoiceQuestionPointer.hpp
     QuestionWidget/OneChoiceQuestionWidget.hpp
-    Token/Token.hpp
     Parser/Parser.hpp
     Parser/JsonParser.hpp
-    Token/Token.hpp
-    Token/EndToken.hpp
-    Token/FailToken.hpp
-    Token/QuestionToken.hpp
-    Defines/TokenPointer.hpp
     Defines/ParserPointer.hpp
-    Context/NextQuestionResult.hpp
-    Context/Context.hpp
     Seeker/Seeker.hpp
     Seeker/CurrentDirSeeker.hpp
     Question/QuestionList.hpp
@@ -77,11 +69,6 @@ set(sources
     QuestionWidget/OneChoiceQuestionWidget.cpp
     Parser/Parser.cpp
     Parser/JsonParser.cpp
-    Token/Token.cpp
-    Token/EndToken.cpp
-    Token/FailToken.cpp
-    Token/QuestionToken.cpp
-    Context/Context.cpp
     Seeker/CurrentDirSeeker.cpp
     Question/QuestionList.cpp
     Test/Test.cpp

@@ -1,27 +1,28 @@
 #include "fetchTests.hpp"
 #include "Defines/StringListPointer.hpp"
-#include "Context/Context.hpp"
 #include "Defines/TestListPointer.hpp"
+#include "Defines/ParserPointer.hpp"
+#include "Parser/JsonParser.hpp"
 
 TestSuitePointer fetchTests(const SeekerPointer seeker, const TestFormat format) {
 	
 	StringListUniquePointer entries(seeker->takeEntryList());
-	Context context(entries.get());
-	
-	context.makeJsonParser();
+    ParserUniquePointer parser;
+    switch(format) {
+        case TestFormat::json:
+            parser.reset(new JsonParser);
+            break;
+    }
 	
 	TestListUniquePointer tests(new TestList);
+    QList<StringPointer>::const_iterator it = entries->constBegin();
+    const QList<StringPointer>::const_iterator end = entries->constEnd();
 		
-	while(context.nextTest()) {
-		QuestionListUniquePointer questions(new QuestionList);
-		NextQuestionResult result;
-		QuestionUniquePointer question;
-		while((result = context.nextQuestion(&question)) == NextQuestionResult::success) {
-			questions->append(question.release());
-		}
-		if(result == NextQuestionResult::end) {
-			tests->append(new Test(questions.release()));
-		}
+	while(it != end) {
+		TestUniquePointer test;
+		if(parser->parseTest(**it, &test))
+            tests->append(test.release());
+        ++it;
 	}
 	return new TestSuite(tests.release());
 	

@@ -10,11 +10,13 @@ class Question {
 	
 	private:
 	StringUniquePointer header;
+    StringUniquePointer category;
 	
 	public:
-	Question(StringPointer header);
+	Question(StringPointer header, StringPointer category);
 	
 	ConstStringPointer getHeader() const;
+    ConstStringPointer getCategory() const;
 	
 	virtual QuestionWidget * newQuestionWidget(QWidget * parent) const = 0;
 	

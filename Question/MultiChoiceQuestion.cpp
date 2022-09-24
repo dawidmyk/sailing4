@@ -1,9 +1,10 @@
 #include "QuestionWidget/MultiChoiceQuestionWidget.hpp"
 #include "Defines/MultiChoiceSolutionPointer.hpp"
 
-MultiChoiceQuestion::MultiChoiceQuestion(const StringPointer header, const StringListPointer possibleAnswers,
-	const SetOfIntsPointer correctAnswers):
-	NormalQuestion(header, possibleAnswers), correctAnswers(correctAnswers)
+MultiChoiceQuestion::MultiChoiceQuestion(const StringPointer header, const StringPointer category,
+                                         const StringListPointer possibleAnswers,
+	                                     const SetOfIntsPointer correctAnswers):
+	NormalQuestion(header, category, possibleAnswers), correctAnswers(correctAnswers)
 	{
 	}
 	

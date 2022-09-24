@@ -8,25 +8,21 @@
 #include <QJsonObject>
 
 class JsonParser : public Parser {
-	
-	private:
-	std::unique_ptr<QJsonArray> array;
-	
-	QJsonArray::const_iterator iterator;
-	
-	QJsonArray::const_iterator end;
+
+    private:
+    QJsonDocument * readDocument(const QString & filename);
+    bool getQuestion(QuestionUniquePointer * question, const QJsonObject * object);
 
 	public:
-	
-	void setSource(const QString & filename) override;
-	
-	TokenPointer nextToken() override;
+
+    bool parseTest(const QString & filename, TestUniquePointer * test) override;
+    bool parseQuestion(const QString & filename, QuestionUniquePointer * question) override;
 	
 	~JsonParser() override;
 	
 	private:
 		
-	static bool getHeader(QJsonObject::const_iterator objectIterator, StringUniquePointer * header);
+	static bool getString(QJsonObject::const_iterator objectIterator, StringUniquePointer * string);
 
 	static bool getPossibleAnswers(QJsonObject::const_iterator objectIterator,
 		StringListUniquePointer * possibleAnswers);

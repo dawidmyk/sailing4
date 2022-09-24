@@ -10,7 +10,8 @@ class MultiChoiceQuestion : public NormalQuestion {
 	
 	public:
 	
-	MultiChoiceQuestion(StringPointer header, StringListPointer possibleAnswers, SetOfIntsPointer correctAnswers);
+	MultiChoiceQuestion(StringPointer header, StringPointer category,
+                        StringListPointer possibleAnswers, SetOfIntsPointer correctAnswers);
 	
 	ConstSetOfIntsPointer getCorrectAnswers() const;
 	

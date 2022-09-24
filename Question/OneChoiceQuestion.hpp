@@ -8,7 +8,8 @@ class OneChoiceQuestion : public NormalQuestion {
 	int correctAnswer;
 	
 	public:
-	OneChoiceQuestion(StringPointer header, StringListPointer possibleAnswers, int correctAnswer);
+	OneChoiceQuestion(StringPointer header, StringPointer category,
+                      StringListPointer possibleAnswers, int correctAnswer);
 	
 	int getCorrectAnswer() const;
 	

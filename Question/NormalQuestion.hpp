@@ -9,7 +9,7 @@ class NormalQuestion : public Question {
 	StringListUniquePointer possibleAnswers;
 	
 	public:
-	NormalQuestion(StringPointer header, StringListPointer possibleAnswers);
+	NormalQuestion(StringPointer header, StringPointer category, StringListPointer possibleAnswers);
 	
 	ConstStringListPointer getPossibleAnswers() const;
 	
